@@ -1,4 +1,5 @@
 import { FormEvent, useState } from 'react';
+import axios from 'axios';
 
 import { Envelope, Lock } from 'phosphor-react';
 import { Button } from '../components/Button';
@@ -11,8 +12,16 @@ import { Logo } from '../Logo';
 export function SignIn() {
     const [isUserSignedIn, setIsUserSignedIn] = useState(false)
 
-    function handleSignIn(event: FormEvent) {
+    async function handleSignIn(event: FormEvent) {
         event.preventDefault();
+
+        const formData = new FormData(event.target as HTMLFormElement);
+        const data = Object.fromEntries(formData);
+
+        const respose = await axios.post('/sessions', {
+            email: data.email,
+            password: data.password,
+        })
 
         setIsUserSignedIn(true)
     }
@@ -30,7 +39,7 @@ export function SignIn() {
                     Faça login e comece a usar!
                 </Text>
             </header>
-            
+
             <form onSubmit={handleSignIn} action="" className='flex flex-col gap-4 items-stretch w-full max-w-[400px] mt-10'>
                 {isUserSignedIn && <Text>Login realizado!</Text>}
                 
